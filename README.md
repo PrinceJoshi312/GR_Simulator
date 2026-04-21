@@ -1,75 +1,99 @@
-# ⬡ GRsimulator
-### *General Relativity Solar System Gravity Simulator*
+# ⬡ GRsimulator v0.2.0
+### *Advanced General Relativity Command Center*
 
 > "Gravity is not a force that pulls; it is the very shape of space and time itself."
 
-**GRsimulator** is a high-precision, Python-based engine that moves beyond Newtonian physics to model the universe as Einstein saw it. Instead of treating gravity as an invisible string pulling planets together, this simulator treats the Sun as a heavy weight on a trampoline, curving the "fabric" of spacetime. Planets simply follow the straightest possible path (a *geodesic*) through that curved surface.
+**GRsimulator** is a professional-grade scientific simulation engine that models the universe as Einstein saw it. It moves beyond simple Newtonian physics to solve the **Einstein Field Equations** in real-time, visualizing the "fabric" of spacetime through a modern glassmorphism command center.
 
 ---
 
 ## 🌟 Why GRsimulator?
 
-Most space simulators use "Newtonian" gravity because it's simpler. While that works for basic orbits, it fails to explain the precision of our universe. **GRsimulator** is built from the ground up to be "relativistically correct."
+Most simulators treat gravity as an invisible string pulling planets together. **GRsimulator** treats the Sun or a Black Hole as a weight curving the four-dimensional sheet of spacetime.
 
-- **Physics-First:** We don't use "patches" for relativity; we solve the actual Einsteinian equations of motion.
-- **Multi-Scale Precision:** From the massive Sun ($10^{30}$ kg) down to a $70$ kg human, the engine maintains accuracy across an extreme range of scales.
-- **Active Exploration:** Pilot rockets and plan missions where **Time Dilation** isn't just a theory—it's a functional constraint on your journey.
+- **Kerr & Schwarzschild Metrics:** Support for both static (Schwarzschild) and rotating (Kerr) central masses.
+- **Scientific Rigor:** High-fidelity 4th-Order Runge-Kutta (RK4) integration with `float64` precision.
+- **Relativistic Time Dilation:** Real-time monitoring of **Proper Time ($\tau$)** vs **Coordinate Time ($t$)**.
+- **Frame Dragging:** Witness the **Lense-Thirring effect** around spinning black holes.
+- **Einstein vs. Newton Mode:** Toggle real-time "Ghost Orbits" to see where classical physics fails and General Relativity takes over.
+- **Top-Down Perspective:** Switch to a high-altitude system view to visualize the global curvature of the solar system.
 
 ---
 
 ## 🚀 Key Features
 
-- **Schwarzschild Spacetime:** Accurate modeling of the static, curved geometry around the Sun.
-- **Mercury's Precession:** Witness the "flowering" orbit of Mercury—a phenomenon Newtonian physics cannot explain.
-- **Gravitational Time Dilation:** See how time moves slower for objects closer to a massive body (Proper Time vs. Coordinate Time).
-- **Interactive 3D Visualization:** Real-time rendering of spacetime paths with persistent orbit trails and camera controls.
-- **Rocket Propulsion (Phase 2):** Launch and steer rockets with active thrust vectors within a General Relativity field.
+- **Modern Glassmorphism UI:** A sleek, aerospace-inspired dashboard with real-time telemetry HUDs.
+- **Dynamic Spacetime Fabric:** High-resolution 3D grid that deforms in real-time based on object mass.
+- **Einstein vs. Newton Comparison:** Visual wireframe "ghosts" follow purely Newtonian paths, making orbital precession (like Mercury's) instantly visible.
+- **Relativistic Time Dilation HUD:** A dual-hand clock visualizer comparing the Local Proper Time (τ) of an object to the System Coordinate Time (t).
+- **Top-Down Camera Mode:** A unified "Map View" that locks high above the system to show the Sun and planets simultaneously with their curvature.
+- **Temporal Compression:** Adjustable time-scaling from real-time to watching millennia pass in seconds.
+- **Scenario Presets:** Instant loading of the Solar System, extreme Black Hole orbits, or Mercury's anomalous precession.
 
 ---
 
-## 🛠️ Technology Stack
+## 🛠️ Performance & Customization
 
-- **Language:** Python 3.10+
-- **Numerics:** NumPy & SciPy (High-order adaptive ODE solvers like RK45)
-- **Visualization:** Matplotlib / PyOpenGL (Real-time 3D rendering)
-- **Data:** Telemetry export via NumPy `.npz` and CSV
+The simulator is designed to be scalable based on your hardware. If you experience performance issues or want higher visual fidelity:
+
+- **Grid Resolution:** You can increase or decrease the "smoothness" of the spacetime grid by modifying the `segments` variable in `ui/src/features/workspace/SpacetimeGrid.tsx`. 
+    - Higher segments (e.g., 128) provide a "liquid-like" fabric but require a stronger GPU.
+    - Lower segments (e.g., 32) are recommended for integrated graphics or older devices.
+- **Particle Count:** Adjust the `count` in `ui/src/features/workspace/ParticleSpacetimeField.tsx` to change the density of the background star warping effect.
 
 ---
 
-## 📐 How It Works (The Simple Version)
+## 📐 The Physics (How It Works)
 
-Imagine the Sun is a bowling ball on a rubber sheet. 
-1. **The Metric:** We define the "shape" of the rubber sheet (Schwarzschild Metric).
-2. **The Connection:** we calculate the "slopes" and "curves" at every point (Christoffel Symbols).
-3. **The Path:** We find the path of least resistance for a planet or rocket (The Geodesic Equation).
-4. **The Solve:** We use a high-powered math "engine" to step through time and update positions (RK45 Integrator).
+- **Backend:** FastAPI (Python 3.12) - Domain-Driven Design physics kernel.
+- **Frontend:** React 19, TypeScript, Vite.
+- **Visualization:** React-Three-Fiber (WebGL), Three.js.
+- **Math:** NumPy (Vectorized tensor calculations).
+- **Communication:** Server-Sent Events (SSE) for 60Hz telemetry streaming.
 
-*For a deep dive into the math and architecture, see our [Technical Details](docs/TECHNICAL_DETAILS.md).*
+---
+
+## 📐 The Physics (How It Works)
+
+1.  **The Metric:** We define the geometry of space (Schwarzschild or Kerr).
+2.  **The Connection:** We calculate the "slopes" of curvature (Christoffel Symbols).
+3.  **The Path:** We solve the **Geodesic Equation** to find the object's path.
+4.  **The Solve:** RK4 integrator steps through time to update 4D coordinates.
+
+---
+
+## 📚 Deep Dive Documentation
+
+For a detailed understanding of the project, explore the following:
+*   **[Physics Engine Deep Dive](docs/deep-dive/PHYSICS_ENGINE.md)**: Mathematical breakdown of metrics and equations.
+*   **[Code Architecture](docs/deep-dive/CODE_ARCHITECTURE.md)**: Technical overview of the Backend and Frontend design.
+*   **[Further Study & Resources](docs/deep-dive/RESOURCES.md)**: Links to textbooks and research papers.
 
 ---
 
 ## 🚥 Getting Started
 
 ### Prerequisites
-- Python 3.10 or higher
-- `pip install numpy scipy matplotlib`
+- Python 3.12+
+- Node.js 18+
 
-### Running a Scenario
-You can run pre-configured scientific scenarios straight from the CLI:
-```bash
-python main.py --scenario mercury_precession
-```
-
----
-
-## 🗺️ Roadmap
-- **Phase 1 (MVP):** Planetary orbits in a Schwarzschild field. (Complete)
-- **Phase 2 (Growth):** Rockets, thrust, and human-scale objects. (In Progress)
-- **Phase 3 (Vision):** Rotating Black Holes (Kerr Metric) and Gravitational Lensing.
+### Setup & Run
+1. **Backend:**
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   uvicorn app.main:app --reload
+   ```
+2. **Frontend:**
+   ```bash
+   cd ui
+   npm install
+   npm run dev
+   ```
 
 ---
 
 ## 📜 License & Usage
-This project is an **Open-Source Educational & Scientific Research Tool**. It is designed for students and researchers to explore the beauty of General Relativity without the "red tape" of proprietary software.
+This project is an **Open-Source Educational & Scientific Research Tool**.
 
 *Created as a Technical Challenge Project by Prince Joshi.*

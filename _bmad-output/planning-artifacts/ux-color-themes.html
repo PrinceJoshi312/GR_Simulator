@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GRsimulator Color Themes</title>
+  <style>
+    body { margin: 0; font-family: Segoe UI, Arial, sans-serif; background:#0b0f14; color:#e9eef5; }
+    header { padding: 14px 16px; border-bottom:1px solid #223044; background:#111724; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:12px; padding:12px; }
+    .theme { border:1px solid #2a3a52; border-radius:10px; overflow:hidden; background:#0f1520; }
+    .name { padding:8px 10px; border-bottom:1px solid #223044; font-weight:600; }
+    .swatches { display:grid; grid-template-columns: repeat(5,1fr); }
+    .sw { height:64px; }
+    .meta { padding:8px 10px; font-size:12px; color:#b8c5d6; }
+  </style>
+</head>
+<body>
+  <header><strong>GRsimulator UX Color Themes</strong></header>
+  <main class="grid">
+    <section class="theme">
+      <div class="name">Theme A - Scientific Dark</div>
+      <div class="swatches">
+        <div class="sw" style="background:#0b1220"></div><div class="sw" style="background:#45b7ff"></div><div class="sw" style="background:#8d6bff"></div><div class="sw" style="background:#4fd17a"></div><div class="sw" style="background:#f0b14a"></div>
+      </div>
+      <div class="meta">Primary for viewport + telemetry-heavy workflows.</div>
+    </section>
+    <section class="theme">
+      <div class="name">Theme B - Observatory Night</div>
+      <div class="swatches">
+        <div class="sw" style="background:#0e1018"></div><div class="sw" style="background:#5ec0ff"></div><div class="sw" style="background:#d28cff"></div><div class="sw" style="background:#63d98e"></div><div class="sw" style="background:#ff6f7e"></div>
+      </div>
+      <div class="meta">Higher contrast alerts and comparative overlays.</div>
+    </section>
+    <section class="theme">
+      <div class="name">Theme C - Classroom Contrast</div>
+      <div class="swatches">
+        <div class="sw" style="background:#111827"></div><div class="sw" style="background:#6cc7ff"></div><div class="sw" style="background:#7c90ff"></div><div class="sw" style="background:#7de091"></div><div class="sw" style="background:#ffbe5c"></div>
+      </div>
+      <div class="meta">Balanced for projector and teaching contexts.</div>
+    </section>
+  </main>
+</body>
+</html>

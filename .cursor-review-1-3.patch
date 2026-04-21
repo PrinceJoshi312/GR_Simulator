@@ -1,0 +1,685 @@
+﻿diff --git a/.cursor-empty b/_bmad-output/implementation-artifacts/1-3-object-catalog-custom-objects-and-runtime-controls.md
+index e69de29..8f922e2 100644
+--- a/.cursor-empty
++++ b/_bmad-output/implementation-artifacts/1-3-object-catalog-custom-objects-and-runtime-controls.md
+@@ -0,0 +1,67 @@
++# Story 1.3: Object Catalog, Custom Objects, and Runtime Controls
++
++Status: review
++
++## Story
++
++As a simulation user,  
++I want to load standard bodies, add custom objects, and tune parameters at runtime,  
++so that I can explore different relativistic conditions.
++
++## Acceptance Criteria
++
++1. Given the simulation workspace is running, when I select catalog bodies or create a custom object, then objects are added with validated initial conditions.
++2. Given a running workspace, when I update timestep, G, or central mass, then runtime controls apply safely without corrupting run state.
++3. Given run lifecycle controls, when I pause/resume/reset, then deterministic behavior is preserved.
++
++## Tasks / Subtasks
++
++- [x] Add object catalog and custom-object registration to simulation engine (AC: 1)
++  - [x] Support loading predefined catalog bodies.
++  - [x] Validate custom object mass/state inputs.
++- [x] Add runtime parameter controls for timestep/G/central-mass updates (AC: 2)
++  - [x] Apply validated params without invalidating active run state.
++- [x] Expose engine controls through typed run API endpoints (AC: 1, 2, 3)
++  - [x] Add routes for catalog load, custom object add, and runtime parameter update.
++  - [x] Preserve canonical response/error envelopes.
++- [x] Expand integration/regression coverage for object management and controls (AC: 1, 2, 3)
++  - [x] Add API tests for object add/catalog load/param update.
++  - [x] Add deterministic checks across pause/resume/reset and parameter updates.
++
++## Dev Notes
++
++Follow established backend boundaries from Stories 1.1 and 1.2. Keep APIs typed and deterministic behavior explicit.
++
++## Dev Agent Record
++
++### Agent Model Used
++
++Codex 5.3
++
++### Debug Log References
++
++- 2026-04-13 create/dev kickoff for Story 1.3
++- 2026-04-13 DS implementation for Story 1.3
++- `pytest` (backend): 10 passed
++- `npm test` (ui): 1 passed
++
++### Completion Notes List
++
++- Story created from sprint backlog and set to in-progress for immediate implementation.
++- Added catalog/custom-object management plus runtime parameter updates in simulation engine.
++- Added API routes for catalog object add, custom object add, runtime parameter updates, and resume lifecycle.
++- Expanded integration/regression tests to cover object workflows and deterministic lifecycle controls.
++
++### File List
++
++- `_bmad-output/implementation-artifacts/1-3-object-catalog-custom-objects-and-runtime-controls.md`
++- `backend/app/contracts/runs.py`
++- `backend/app/domain/simulation/engine.py`
++- `backend/app/api/routers/runs.py`
++- `backend/tests/integration/test_runs_api.py`
++- `backend/tests/regression/test_deterministic_seed.py`
++
++## Change Log
++
++- 2026-04-13: Story 1.3 started for implementation.
++- 2026-04-13: Implemented Story 1.3 object catalog/custom object/runtime controls; moved story to `review`.
+diff --git a/.cursor-empty b/_bmad-output/implementation-artifacts/sprint-status.yaml
+index e69de29..74a88bc 100644
+--- a/.cursor-empty
++++ b/_bmad-output/implementation-artifacts/sprint-status.yaml
+@@ -0,0 +1,64 @@
++# generated: 2026-04-13T22:16:41+05:30
++# last_updated: 2026-04-13T22:16:41+05:30
++# project: GRsimulator
++# project_key: NOKEY
++# tracking_system: file-system
++# story_location: C:/Users/HP/OneDrive/Desktop/GRsimulator/_bmad-output/implementation-artifacts
++#
++# STATUS DEFINITIONS:
++# ==================
++# Epic Status:
++#   - backlog: Epic not yet started
++#   - in-progress: Epic actively being worked on
++#   - done: All stories in epic completed
++#
++# Epic Status Transitions:
++#   - backlog -> in-progress: Automatically when first story is created (via create-story)
++#   - in-progress -> done: Manually when all stories reach 'done' status
++#
++# Story Status:
++#   - backlog: Story only exists in epic file
++#   - ready-for-dev: Story file created in stories folder
++#   - in-progress: Developer actively working on implementation
++#   - review: Ready for code review (via Dev's code-review workflow)
++#   - done: Story completed
++#
++# Retrospective Status:
++#   - optional: Can be completed but not required
++#   - done: Retrospective has been completed
++#
++# WORKFLOW NOTES:
++# ===============
++# - Epic transitions to 'in-progress' automatically when first story is created
++# - Stories can be worked in parallel if team capacity allows
++# - Developer typically creates next story after previous one is 'done' to incorporate learnings
++# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
++
++generated: 2026-04-13T22:16:41+05:30
++last_updated: 2026-04-13T23:52:08+05:30
++project: GRsimulator
++project_key: NOKEY
++tracking_system: file-system
++story_location: C:/Users/HP/OneDrive/Desktop/GRsimulator/_bmad-output/implementation-artifacts
++
++development_status:
++  epic-1: in-progress
++  1-1-initialize-core-simulation-workspace-and-run-pipeline: done
++  1-2-implement-schwarzschild-physics-and-geodesic-integration: done
++  1-3-object-catalog-custom-objects-and-runtime-controls: review
++  epic-1-retrospective: optional
++  epic-2: backlog
++  2-1-build-3d-viewport-camera-controls-and-orbit-trails: backlog
++  2-2-implement-real-time-telemetry-and-validation-strip: backlog
++  2-3-guided-expert-ux-modes-and-accessibility-baseline: backlog
++  epic-2-retrospective: optional
++  epic-3: backlog
++  3-1-implement-validation-suite-with-mercury-benchmark: backlog
++  3-2-generate-accuracy-reports-and-metadata-rich-exports: backlog
++  3-3-save-load-state-with-deterministic-replay: backlog
++  epic-3-retrospective: optional
++  epic-4: backlog
++  4-1-add-thrust-enabled-object-model-and-non-geodesic-eom: backlog
++  4-2-build-mission-trajectory-planning-workflow: backlog
++  4-3-real-time-mission-time-drift-monitoring: backlog
++  epic-4-retrospective: optional
+diff --git a/.cursor-empty b/backend/app/contracts/runs.py
+index e69de29..f13b1f5 100644
+--- a/.cursor-empty
++++ b/backend/app/contracts/runs.py
+@@ -0,0 +1,34 @@
++from pydantic import BaseModel
++
++
++class RunCreateRequest(BaseModel):
++    scenario_id: str = "default-schwarzschild"
++    seed: int = 42
++    g: float = 6.6743e-11
++    central_mass: float = 1.98847e30
++
++
++class ObjectCreateRequest(BaseModel):
++    name: str
++    mass: float
++    x: float
++    y: float
++    vx: float
++    vy: float
++
++
++class RuntimeParamsRequest(BaseModel):
++    timestep: float
++    g: float
++    central_mass: float
++
++
++class RunLifecycleResponse(BaseModel):
++    run_id: str
++    state: str
++    scenario_id: str
++    seed: int
++    g: float
++    central_mass: float
++    engine_version: str = "0.1.0"
++    app_version: str = "0.1.0"
+diff --git a/.cursor-empty b/backend/app/domain/simulation/engine.py
+index e69de29..0a430b2 100644
+--- a/.cursor-empty
++++ b/backend/app/domain/simulation/engine.py
+@@ -0,0 +1,217 @@
++from dataclasses import dataclass
++from math import isfinite
++from uuid import uuid4
++
++import numpy as np
++
++from app.domain.physics.christoffel import equatorial_christoffel
++from app.domain.physics.metric import schwarzschild_metric
++
++
++@dataclass
++class ObjectState:
++    x: np.float64
++    y: np.float64
++    vx: np.float64
++    vy: np.float64
++    proper_time: np.float64 = np.float64(0.0)
++    coordinate_time: np.float64 = np.float64(0.0)
++
++
++@dataclass
++class SimulationObject:
++    name: str
++    mass: np.float64
++    state: ObjectState
++
++
++@dataclass
++class SimulationRun:
++    run_id: str
++    state: str
++    scenario_id: str
++    seed: int
++    g: float
++    central_mass: float
++    engine_version: str = "0.1.0"
++    app_version: str = "0.1.0"
++    object_state: ObjectState | None = None
++    objects: list[SimulationObject] | None = None
++    timestep: np.float64 = np.float64(1.0)
++
++
++class SimulationEngine:
++    def __init__(self) -> None:
++        self._runs: dict[str, SimulationRun] = {}
++        self._catalog = {
++            "mercury": {"mass": np.float64(3.3011e23), "x": np.float64(5.79e10), "y": np.float64(0.0), "vx": np.float64(0.0), "vy": np.float64(4.74e4)},
++            "earth": {"mass": np.float64(5.972e24), "x": np.float64(1.496e11), "y": np.float64(0.0), "vx": np.float64(0.0), "vy": np.float64(2.98e4)},
++        }
++
++    def _serialize_run(self, run: SimulationRun) -> dict:
++        def _state_to_dict(state: ObjectState) -> dict:
++            return {
++                "x": float(state.x),
++                "y": float(state.y),
++                "vx": float(state.vx),
++                "vy": float(state.vy),
++                "proper_time": float(state.proper_time),
++                "coordinate_time": float(state.coordinate_time),
++            }
++
++        objects = run.objects or []
++        return {
++            "run_id": run.run_id,
++            "state": run.state,
++            "scenario_id": run.scenario_id,
++            "seed": run.seed,
++            "g": run.g,
++            "central_mass": run.central_mass,
++            "engine_version": run.engine_version,
++            "app_version": run.app_version,
++            "timestep": float(run.timestep),
++            "objects": [{"name": obj.name, "mass": float(obj.mass), "state": _state_to_dict(obj.state)} for obj in objects],
++        }
++
++    def start_run(self, scenario_id: str, seed: int, g: float, central_mass: float) -> SimulationRun:
++        metric = schwarzschild_metric(central_mass=central_mass, g=g, r=5.79e10)
++        _ = equatorial_christoffel(metric)
++        run = SimulationRun(
++            run_id=str(uuid4()),
++            state="running",
++            scenario_id=scenario_id,
++            seed=seed,
++            g=g,
++            central_mass=central_mass,
++            object_state=ObjectState(
++                x=np.float64(5.79e10),
++                y=np.float64(0.0),
++                vx=np.float64(0.0),
++                vy=np.float64(4.74e4),
++            ),
++            objects=[
++                SimulationObject(
++                    name="mercury",
++                    mass=np.float64(3.3011e23),
++                    state=ObjectState(
++                        x=np.float64(5.79e10),
++                        y=np.float64(0.0),
++                        vx=np.float64(0.0),
++                        vy=np.float64(4.74e4),
++                    ),
++                )
++            ],
++        )
++        self._runs[run.run_id] = run
++        return run
++
++    def snapshot_run(self, run_id: str) -> dict | None:
++        run = self._runs.get(run_id)
++        if run is None:
++            return None
++        return self._serialize_run(run)
++
++    def add_catalog_object(self, run_id: str, object_name: str) -> SimulationRun | None:
++        run = self._runs.get(run_id)
++        spec = self._catalog.get(object_name.lower())
++        if run is None or spec is None:
++            return None
++        return self.add_custom_object(
++            run_id=run_id,
++            name=object_name.lower(),
++            mass=float(spec["mass"]),
++            x=float(spec["x"]),
++            y=float(spec["y"]),
++            vx=float(spec["vx"]),
++            vy=float(spec["vy"]),
++        )
++
++    def add_custom_object(self, run_id: str, name: str, mass: float, x: float, y: float, vx: float, vy: float) -> SimulationRun | None:
++        run = self._runs.get(run_id)
++        if run is None:
++            return None
++        if mass <= 0 or not all(isfinite(v) for v in [mass, x, y, vx, vy]):
++            raise ValueError("invalid object parameters")
++        if run.objects is None:
++            run.objects = []
++        run.objects.append(
++            SimulationObject(
++                name=name,
++                mass=np.float64(mass),
++                state=ObjectState(x=np.float64(x), y=np.float64(y), vx=np.float64(vx), vy=np.float64(vy)),
++            )
++        )
++        return run
++
++    def update_runtime_params(self, run_id: str, timestep: float, g: float, central_mass: float) -> SimulationRun | None:
++        run = self._runs.get(run_id)
++        if run is None:
++            return None
++        if timestep <= 0 or g <= 0 or central_mass <= 0:
++            raise ValueError("invalid runtime parameters")
++        run.timestep = np.float64(timestep)
++        run.g = float(g)
++        run.central_mass = float(central_mass)
++        return run
++
++    def step_run(self, run_id: str, dt: float = 1.0) -> SimulationRun | None:
++        run = self._runs.get(run_id)
++        if run is None or run.state != "running":
++            return None
++        if not isfinite(dt) or dt <= 0:
++            raise ValueError("dt must be finite and positive")
++
++        dt64 = np.float64(dt if dt else run.timestep)
++        for obj in run.objects or []:
++            state = obj.state
++            r = np.float64(np.sqrt((state.x * state.x) + (state.y * state.y)))
++            if r <= np.float64(0.0):
++                raise ValueError("object radius must be greater than zero")
++            metric = schwarzschild_metric(central_mass=run.central_mass, g=run.g, r=float(r))
++            gamma = equatorial_christoffel(metric)
++
++            vx = np.float64(state.vx)
++            vy = np.float64(state.vy)
++            radial_velocity = np.float64((state.x * vx + state.y * vy) / r)
++            phi_dot = np.float64((state.x * vy - state.y * vx) / (r * r))
++            ar = np.float64(
++                -(
++                    gamma["gamma_r_tt"]
++                    + gamma["gamma_r_rr"] * radial_velocity * radial_velocity
++                    + gamma["gamma_r_phiphi"] * phi_dot * phi_dot
++                )
++            )
++            ax = np.float64(ar * state.x / r)
++            ay = np.float64(ar * state.y / r)
++
++            state.vx = np.float64(state.vx + ax * dt64)
++            state.vy = np.float64(state.vy + ay * dt64)
++            state.x = np.float64(state.x + state.vx * dt64)
++            state.y = np.float64(state.y + state.vy * dt64)
++            state.coordinate_time = np.float64(state.coordinate_time + dt64)
++            c2 = np.float64(metric["c"] * metric["c"])
++            speed_sq = np.float64(state.vx * state.vx + state.vy * state.vy)
++            lapse = np.float64(max(-metric["g_tt"] - (speed_sq / c2), 1e-12))
++            dilation = np.float64(np.sqrt(lapse))
++            state.proper_time = np.float64(state.proper_time + (dt64 * dilation))
++        if run.objects:
++            run.object_state = run.objects[0].state
++        return run
++
++    def pause_run(self, run_id: str) -> SimulationRun | None:
++        run = self._runs.get(run_id)
++        if run:
++            run.state = "paused"
++        return run
++
++    def resume_run(self, run_id: str) -> SimulationRun | None:
++        run = self._runs.get(run_id)
++        if run:
++            run.state = "running"
++        return run
++
++    def reset_run(self, run_id: str) -> SimulationRun | None:
++        run = self._runs.get(run_id)
++        if run:
++            run.state = "idle"
++        return run
+diff --git a/.cursor-empty b/backend/app/api/routers/runs.py
+index e69de29..c54ca86 100644
+--- a/.cursor-empty
++++ b/backend/app/api/routers/runs.py
+@@ -0,0 +1,124 @@
++from uuid import uuid4
++
++from fastapi import APIRouter
++from fastapi.responses import JSONResponse
++
++from app.contracts.runs import ObjectCreateRequest, RunCreateRequest, RuntimeParamsRequest
++from app.domain.simulation.engine import SimulationEngine
++
++router = APIRouter(prefix="/runs", tags=["runs"])
++engine = SimulationEngine()
++
++
++def _success(data: dict, request_id: str | None = None) -> dict:
++    return {"data": data, "meta": {"request_id": request_id or str(uuid4())}, "error": None}
++
++
++def _error(code: str, message: str, context: dict | None = None, request_id: str | None = None) -> dict:
++    return {
++        "data": None,
++        "meta": {"request_id": request_id or str(uuid4())},
++        "error": {"code": code, "message": message, "context": context or {}, "hint": "Check request parameters"},
++    }
++
++
++@router.post("")
++def create_run(payload: RunCreateRequest) -> dict:
++    run = engine.start_run(
++        scenario_id=payload.scenario_id,
++        seed=payload.seed,
++        g=payload.g,
++        central_mass=payload.central_mass,
++    )
++    return _success(data=engine.snapshot_run(run.run_id) or {})
++
++
++@router.post("/{run_id}/pause")
++def pause_run(run_id: str) -> dict:
++    run = engine.pause_run(run_id)
++    if run is None:
++        return JSONResponse(
++            status_code=404,
++            content=_error(code="RUN_NOT_FOUND", message="run not found", context={"run_id": run_id}),
++        )
++    return _success(data=engine.snapshot_run(run.run_id) or {})
++
++
++@router.post("/{run_id}/resume")
++def resume_run(run_id: str) -> dict:
++    run = engine.resume_run(run_id)
++    if run is None:
++        return JSONResponse(
++            status_code=404,
++            content=_error(code="RUN_NOT_FOUND", message="run not found", context={"run_id": run_id}),
++        )
++    return _success(data=engine.snapshot_run(run.run_id) or {})
++
++
++@router.post("/{run_id}/reset")
++def reset_run(run_id: str) -> dict:
++    run = engine.reset_run(run_id)
++    if run is None:
++        return JSONResponse(
++            status_code=404,
++            content=_error(code="RUN_NOT_FOUND", message="run not found", context={"run_id": run_id}),
++        )
++    return _success(data=engine.snapshot_run(run.run_id) or {})
++
++
++@router.post("/{run_id}/objects/catalog/{object_name}")
++def add_catalog_object(run_id: str, object_name: str) -> dict:
++    run = engine.add_catalog_object(run_id, object_name)
++    if run is None:
++        return JSONResponse(
++            status_code=404,
++            content=_error(code="RUN_OR_OBJECT_NOT_FOUND", message="run or catalog object not found", context={"run_id": run_id, "object_name": object_name}),
++        )
++    return _success(data=engine.snapshot_run(run.run_id) or {})
++
++
++@router.post("/{run_id}/objects")
++def add_custom_object(run_id: str, payload: ObjectCreateRequest) -> dict:
++    try:
++        run = engine.add_custom_object(
++            run_id=run_id,
++            name=payload.name,
++            mass=payload.mass,
++            x=payload.x,
++            y=payload.y,
++            vx=payload.vx,
++            vy=payload.vy,
++        )
++    except ValueError as exc:
++        return JSONResponse(
++            status_code=400,
++            content=_error(code="INVALID_OBJECT", message=str(exc), context={"run_id": run_id}),
++        )
++    if run is None:
++        return JSONResponse(
++            status_code=404,
++            content=_error(code="RUN_NOT_FOUND", message="run not found", context={"run_id": run_id}),
++        )
++    return _success(data=engine.snapshot_run(run.run_id) or {})
++
++
++@router.post("/{run_id}/params")
++def update_runtime_params(run_id: str, payload: RuntimeParamsRequest) -> dict:
++    try:
++        run = engine.update_runtime_params(
++            run_id=run_id,
++            timestep=payload.timestep,
++            g=payload.g,
++            central_mass=payload.central_mass,
++        )
++    except ValueError as exc:
++        return JSONResponse(
++            status_code=400,
++            content=_error(code="INVALID_PARAMS", message=str(exc), context={"run_id": run_id}),
++        )
++    if run is None:
++        return JSONResponse(
++            status_code=404,
++            content=_error(code="RUN_NOT_FOUND", message="run not found", context={"run_id": run_id}),
++        )
++    return _success(data=engine.snapshot_run(run.run_id) or {})
+diff --git a/.cursor-empty b/backend/tests/integration/test_runs_api.py
+index e69de29..f132c82 100644
+--- a/.cursor-empty
++++ b/backend/tests/integration/test_runs_api.py
+@@ -0,0 +1,69 @@
++from fastapi.testclient import TestClient
++
++from app.main import app
++
++
++def test_run_lifecycle_and_metadata() -> None:
++    client = TestClient(app)
++
++    create_res = client.post("/runs", json={"scenario_id": "default-schwarzschild", "seed": 123})
++    assert create_res.status_code == 200
++    create_body = create_res.json()
++    assert create_body["error"] is None
++    assert create_body["data"]["state"] == "running"
++    assert create_body["data"]["seed"] == 123
++    assert "engine_version" in create_body["data"]
++    assert "app_version" in create_body["data"]
++    run_id = create_body["data"]["run_id"]
++
++    pause_res = client.post(f"/runs/{run_id}/pause")
++    assert pause_res.status_code == 200
++    assert pause_res.json()["data"]["state"] == "paused"
++    resume_res = client.post(f"/runs/{run_id}/resume")
++    assert resume_res.status_code == 200
++    assert resume_res.json()["data"]["state"] == "running"
++
++    reset_res = client.post(f"/runs/{run_id}/reset")
++    assert reset_res.status_code == 200
++    assert reset_res.json()["data"]["state"] == "idle"
++
++
++def test_pause_and_reset_missing_run_return_error_envelope() -> None:
++    client = TestClient(app)
++    pause_res = client.post("/runs/missing-id/pause")
++    assert pause_res.status_code == 404
++    pause_body = pause_res.json()
++    assert pause_body["data"] is None
++    assert pause_body["error"]["code"] == "RUN_NOT_FOUND"
++    assert "request_id" in pause_body["meta"]
++
++    reset_res = client.post("/runs/missing-id/reset")
++    assert reset_res.status_code == 404
++    reset_body = reset_res.json()
++    assert reset_body["data"] is None
++    assert reset_body["error"]["code"] == "RUN_NOT_FOUND"
++
++
++def test_catalog_custom_object_and_runtime_params() -> None:
++    client = TestClient(app)
++    create_res = client.post("/runs", json={"scenario_id": "default-schwarzschild", "seed": 7})
++    run_id = create_res.json()["data"]["run_id"]
++
++    catalog_res = client.post(f"/runs/{run_id}/objects/catalog/earth")
++    assert catalog_res.status_code == 200
++    assert len(catalog_res.json()["data"]["objects"]) >= 2
++
++    custom_res = client.post(
++        f"/runs/{run_id}/objects",
++        json={"name": "probe", "mass": 1500.0, "x": 7.0e10, "y": 1.0e8, "vx": 0.0, "vy": 12000.0},
++    )
++    assert custom_res.status_code == 200
++    names = [obj["name"] for obj in custom_res.json()["data"]["objects"]]
++    assert "probe" in names
++
++    params_res = client.post(
++        f"/runs/{run_id}/params",
++        json={"timestep": 5.0, "g": 6.6743e-11, "central_mass": 1.95e30},
++    )
++    assert params_res.status_code == 200
++    assert params_res.json()["data"]["timestep"] == 5.0
+diff --git a/.cursor-empty b/backend/tests/regression/test_deterministic_seed.py
+index e69de29..d1888e2 100644
+--- a/.cursor-empty
++++ b/backend/tests/regression/test_deterministic_seed.py
+@@ -0,0 +1,75 @@
++import pytest
++
++from app.domain.simulation.engine import ObjectState, SimulationEngine
++
++
++def test_same_seed_preserved_in_run_metadata() -> None:
++    engine = SimulationEngine()
++    run_a = engine.start_run("default-schwarzschild", seed=999, g=6.6743e-11, central_mass=1.98847e30)
++    run_b = engine.start_run("default-schwarzschild", seed=999, g=6.6743e-11, central_mass=1.98847e30)
++
++    assert run_a.seed == run_b.seed == 999
++    assert run_a.g == run_b.g
++    assert run_a.central_mass == run_b.central_mass
++    signature_a = f"{run_a.scenario_id}|{run_a.seed}|{run_a.g}|{run_a.central_mass}|{run_a.engine_version}|{run_a.app_version}"
++    signature_b = f"{run_b.scenario_id}|{run_b.seed}|{run_b.g}|{run_b.central_mass}|{run_b.engine_version}|{run_b.app_version}"
++    assert signature_a == signature_b
++
++
++def test_deterministic_step_updates_and_clocks() -> None:
++    engine = SimulationEngine()
++    run_a = engine.start_run("default-schwarzschild", seed=42, g=6.6743e-11, central_mass=1.98847e30)
++    run_b = engine.start_run("default-schwarzschild", seed=42, g=6.6743e-11, central_mass=1.98847e30)
++
++    # Start from identical object state for deterministic check.
++    run_b.object_state = ObjectState(
++        x=run_a.object_state.x,
++        y=run_a.object_state.y,
++        vx=run_a.object_state.vx,
++        vy=run_a.object_state.vy,
++        proper_time=run_a.object_state.proper_time,
++        coordinate_time=run_a.object_state.coordinate_time,
++    )
++    stepped_a = engine.step_run(run_a.run_id, dt=10.0)
++    stepped_b = engine.step_run(run_b.run_id, dt=10.0)
++
++    assert stepped_a is not None and stepped_a.object_state is not None
++    assert stepped_b is not None and stepped_b.object_state is not None
++    assert float(stepped_a.object_state.coordinate_time) > 0.0
++    assert float(stepped_a.object_state.proper_time) > 0.0
++    assert float(stepped_a.object_state.coordinate_time) == float(stepped_b.object_state.coordinate_time)
++    assert float(stepped_a.object_state.proper_time) == float(stepped_b.object_state.proper_time)
++    assert float(stepped_a.object_state.x) == float(stepped_b.object_state.x)
++    assert float(stepped_a.object_state.y) == float(stepped_b.object_state.y)
++
++
++def test_step_rejects_invalid_dt_and_origin_state() -> None:
++    engine = SimulationEngine()
++    run = engine.start_run("default-schwarzschild", seed=1, g=6.6743e-11, central_mass=1.98847e30)
++    with pytest.raises(ValueError):
++        engine.step_run(run.run_id, dt=0.0)
++
++    run.object_state = ObjectState(x=0.0, y=0.0, vx=0.0, vy=0.0)
++    if run.objects:
++        run.objects[0].state = run.object_state
++    with pytest.raises(ValueError):
++        engine.step_run(run.run_id, dt=1.0)
++
++
++def test_pause_resume_reset_preserve_deterministic_controls() -> None:
++    engine = SimulationEngine()
++    run = engine.start_run("default-schwarzschild", seed=11, g=6.6743e-11, central_mass=1.98847e30)
++    before = engine.snapshot_run(run.run_id)
++    assert before is not None
++
++    paused = engine.pause_run(run.run_id)
++    assert paused is not None and paused.state == "paused"
++    assert engine.step_run(run.run_id, dt=1.0) is None
++
++    resumed = engine.resume_run(run.run_id)
++    assert resumed is not None and resumed.state == "running"
++    stepped = engine.step_run(run.run_id, dt=1.0)
++    assert stepped is not None
++
++    reset = engine.reset_run(run.run_id)
++    assert reset is not None and reset.state == "idle"

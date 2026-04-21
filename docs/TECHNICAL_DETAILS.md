@@ -50,3 +50,30 @@ The visualization layer handles the complex task of projecting 4D relativistic p
 The biggest technical hurdle in GRsimulator is the **Scale Ratio**. A 70kg human is "invisible" to a $10^{30}$kg Sun. 
 - **Double Precision:** We use 64-bit floats (`float64`) to ensure that even at a distance of $150$ million kilometers (1 AU), a human's position is tracked down to the millimeter.
 - **Thrust Integration:** For rockets, we modify the geodesic equation by adding a "Force Term" $F^\mu / m$. This allows the simulator to handle **non-geodesic motion**, which is how a pilot "fights" the curvature of space to land on a planet or escape a black hole.
+
+---
+
+## 5. Real-Time Telemetry & Validation: The Trust Layer
+
+To bridge the gap between heavy physics computation and an interactive UI, GRsimulator employs a "Trust-First" communication architecture.
+
+### Background Simulation Loop (The Heartbeat)
+The backend doesn't wait for UI requests to advance the physics. Instead, a **60Hz asynchronous background loop** runs within the FastAPI lifespan. 
+- **Deterministic Stepping:** Every 16.6ms, the loop triggers `step_run()` for all active simulations.
+- **Concurrency:** This loop is isolated from the REST API, ensuring that a slow UI or network hiccup never "stalls" the physics engine.
+
+### Telemetry Streaming via SSE
+We use **Server-Sent Events (SSE)** to push high-frequency data to the frontend.
+- **One-Way Efficiency:** Unlike WebSockets, SSE is optimized for one-way streams (Server -> UI), reducing overhead for telemetry.
+- **Broadcast Mechanism:** The `SimulationEngine` uses `asyncio.Queue` per connected client. When the physics loop finishes a step, it broadcasts a "snapshot" of all objects to these queues simultaneously.
+
+### The Validation Layer: Real-Time Verification
+Scientific credibility requires constant monitoring of numerical health. Every telemetry packet is enhanced with **Validation Metadata** before it leaves the server:
+- **Stability Checks:** The engine monitors for `NaN` or `Inf` values that signal numerical "evaporation" or integration failure.
+- **Event Horizon Proximity:** For every object, the engine calculates the ratio $R / R_s$. If an object approaches the Schwarzschild radius ($R \rightarrow R_s$), the system flags a "Critical" state, as the metric becomes singular and standard integration becomes unreliable.
+- **Error Estimation:** The system tracks the "Energy Constant" of the orbit. In a perfect Schwarzschild vacuum, this should be invariant; any drift in this value is reported as an "Error Estimate" in the UI.
+
+### Coordinate Scaling & Visualization
+The 3D viewport operates on a "Visual Unit" system where **$1$ unit = $10^9$ meters** ($1$ million km). 
+- **Precision Preservation:** All physics calculations are performed in SI units (meters) with `float64` precision. Scaling only happens at the "Last Mile" in the frontend telemetry service to prevent precision loss during integration.
+- **Axis Mapping:** The 2D physics plane $(x, y)$ is mapped to the 3D visual plane $(x, 0, z)$ to align with the standard "orbital plane" representation in astronomical visualizations.

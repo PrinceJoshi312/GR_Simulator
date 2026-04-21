@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GRsimulator UX Design Directions</title>
+  <style>
+    :root { color-scheme: dark; }
+    body { margin: 0; font-family: Segoe UI, Arial, sans-serif; background:#0b0f14; color:#e8edf2; }
+    header { position: sticky; top: 0; background:#111722; border-bottom:1px solid #233042; padding:12px 16px; z-index:2; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(320px,1fr)); gap:12px; padding:12px; }
+    .card { border:1px solid #2a374a; border-radius:10px; overflow:hidden; background:#0f1520; }
+    .title { padding:10px 12px; border-bottom:1px solid #233042; font-weight:600; }
+    .mock { display:grid; grid-template-columns: 2fr 1fr; min-height:220px; }
+    .view { background:radial-gradient(circle at 20% 20%, var(--c1), #0c121a 55%); padding:10px; }
+    .panel { background:#0e141d; border-left:1px solid #233042; padding:10px; }
+    .chip { display:inline-block; margin:2px 4px 2px 0; padding:2px 7px; border-radius:999px; font-size:12px; background:#1a2433; border:1px solid #2b3c55; }
+    .metric { font-family: Consolas, monospace; font-size:12px; margin:6px 0; }
+    .bar { height:6px; border-radius:3px; background:#1b2636; overflow:hidden; }
+    .bar > span { display:block; height:100%; background:var(--c1); width:var(--w,60%); }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>GRsimulator Design Directions</strong> - 8 visual/layout options
+  </header>
+  <section class="grid">
+    <article class="card" style="--c1:#45b7ff"><div class="title">D1 - Instrument Panel</div><div class="mock"><div class="view"><span class="chip">Viewport</span><span class="chip">Trails</span></div><div class="panel"><div class="metric">tau/t: 0.999882</div><div class="bar"><span style="--w:72%"></span></div></div></div></article>
+    <article class="card" style="--c1:#6c8bff"><div class="title">D2 - Research Console</div><div class="mock"><div class="view"><span class="chip">Validation Overlay</span></div><div class="panel"><div class="metric">drift: 0.0031%</div><div class="bar"><span style="--w:44%"></span></div></div></div></article>
+    <article class="card" style="--c1:#4fd1b5"><div class="title">D3 - Guided Learning</div><div class="mock"><div class="view"><span class="chip">Scenario Coach</span></div><div class="panel"><div class="metric">step: 0.01 s</div><div class="bar"><span style="--w:68%"></span></div></div></div></article>
+    <article class="card" style="--c1:#f3b95f"><div class="title">D4 - Alert-Forward Ops</div><div class="mock"><div class="view"><span class="chip">Warnings First</span></div><div class="panel"><div class="metric">stability: caution</div><div class="bar"><span style="--w:55%"></span></div></div></div></article>
+    <article class="card" style="--c1:#d28cff"><div class="title">D5 - Data Dense Expert</div><div class="mock"><div class="view"><span class="chip">Compact Layout</span></div><div class="panel"><div class="metric">Gamma r_tt: 1.2e-10</div><div class="bar"><span style="--w:80%"></span></div></div></div></article>
+    <article class="card" style="--c1:#ff6d8a"><div class="title">D6 - Mission Planner</div><div class="mock"><div class="view"><span class="chip">Burn Timeline</span></div><div class="panel"><div class="metric">delta-v: 3120 m/s</div><div class="bar"><span style="--w:61%"></span></div></div></div></article>
+    <article class="card" style="--c1:#8edb63"><div class="title">D7 - Benchmark Focus</div><div class="mock"><div class="view"><span class="chip">Expected vs Actual</span></div><div class="panel"><div class="metric">precession: 42.97</div><div class="bar"><span style="--w:77%"></span></div></div></div></article>
+    <article class="card" style="--c1:#9dc2ff"><div class="title">D8 - Balanced Hybrid</div><div class="mock"><div class="view"><span class="chip">Guided + Expert</span></div><div class="panel"><div class="metric">export: ready</div><div class="bar"><span style="--w:66%"></span></div></div></div></article>
+  </section>
+</body>
+</html>
