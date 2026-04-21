@@ -1,6 +1,9 @@
 # ⬡ GRsimulator v0.2.0
 ### *Advanced General Relativity Command Center*
 
+![GR_Simulator](./assets/preview.png)
+
+
 > "Gravity is not a force that pulls; it is the very shape of space and time itself."
 
 **GRsimulator** is a professional-grade scientific simulation engine that models the universe as Einstein saw it. It moves beyond simple Newtonian physics to solve the **Einstein Field Equations** in real-time, visualizing the "fabric" of spacetime through a modern glassmorphism command center.
